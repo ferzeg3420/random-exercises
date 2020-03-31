@@ -32,19 +32,6 @@ add_exer()
    echo "Second, minute, hour, rep? (singular): "
    read type
    get_description "${description_file_name}"
-#   if [ -e description_file_name ]
-#   then
-#      exit 1
-#   fi
-#   echo > "${EXER_DB}/${description_file_name}"
-#   
-#   echo "Exercise description (press ctrl-d to exit)."
-#   while read -r user_line
-#   do
-#      echo "$user_line" >> "${EXER_DB}/${description_file_name}"
-#      fmt "${EXER_DB}/${description_file_name}" > /tmp/exer.tmp
-#      mv /tmp/exer.tmp "${EXER_DB}/${description_file_name}" 
-#   done
 
    echo "${name_input},"            \
         "${min_reps},"              \
