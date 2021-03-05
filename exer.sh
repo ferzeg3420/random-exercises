@@ -33,7 +33,7 @@ print_usage()
    echo "    -h Print this page"
 }
 
-while getopts 'eadn:' flag
+while getopts 'eadhn:' flag
 do
   case "${flag}" 
   in

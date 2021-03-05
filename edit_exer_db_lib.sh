@@ -1,5 +1,13 @@
 #!/bin/bash
 
+EXER_NAME=
+MIN_REPS= 
+MAX_REPS=
+
+to_lower() {
+  echo "$1" | tr '[:upper:]' '[:lower:]'
+}
+
 get_description()
 {
    local description_file_name="$1"
@@ -7,6 +15,8 @@ get_description()
    then
       exit 1
    fi
+
+   # create the exercise description file
    echo > "${EXER_DB}/${description_file_name}"
    
    echo "Type the exercise description (press ctrl-d to submit?)."
@@ -18,24 +28,72 @@ get_description()
    done
 }
 
+set_exer_name() 
+{
+  while true
+  do
+     echo -n "Exercise name: "
+     read -r name_input
+
+     local exer_name=`to_lower "$name_input"`
+
+     if [ -n "$exer_name" ]
+     then
+        EXER_NAME="$exer_name"
+        break
+     fi
+  done
+}
+
+set_exer_min_reps() 
+{
+  while true
+  do
+     echo -n "Min reps: "
+     read -r rep_input
+
+     if [[ "$rep_input" =~ ^[1-9][0-9]*$ ]]
+     then
+        MIN_REPS="$rep_input"
+        break
+     fi
+  done
+}
+
+set_exer_max_reps() 
+{
+  while true
+  do
+     echo -n "Max reps: "
+     read -r rep_input
+
+     if [[ "$rep_input" =~ ^[1-9][0-9]*$ ]]
+     then
+        if [ $rep_input -gt $MIN_REPS ]
+        then
+           MAX_REPS="$rep_input"
+           break
+        fi
+     fi
+  done
+}
+
 add_exer()
 {
-   echo "Exercise name:"
-   read name_input
-   echo "Exercise default min reps:"
-   read min_reps
-   echo "Exercise default max reps:"
-   read max_reps
-   description_file_name=`echo "${name_input}"     \
+   set_exer_name
+   set_exer_min_reps
+   set_exer_max_reps
+
+   description_file_name=`echo "${EXER_NAME}"     \
                          | sed 's/[[:space:]]/_/g' \
                          | sed 's/$/\.exer/'`
-   echo "Second, minute, hour, rep? (singular): "
+   echo "Rep units? (second, minute, hour, rep): "
    read type
    get_description "${description_file_name}"
 
-   echo "${name_input},"            \
-        "${min_reps},"              \
-        "${max_reps},"              \
+   echo "${EXER_NAME},"             \
+        "${MIN_REPS},"              \
+        "${MAX_REPS},"              \
         "${description_file_name}," \
         "${type},"                  \
         >> ${EXER_LIST}  
